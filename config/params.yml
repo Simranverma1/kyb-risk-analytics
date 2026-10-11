@@ -1,0 +1,42 @@
+# Central configuration for the KYB risk analytics project.
+# Every path, setting and assumption lives here, so nothing is hard-coded in scripts.
+# null = not decided yet; each value is filled in when a later step produces evidence for it.
+
+project:
+  snapshot_date: 2026-10-01        # date of the Companies House snapshot (from the file name)
+  db_path: data/kyb.duckdb         # the DuckDB database file the pipeline builds
+
+paths:
+  raw_dir: data/raw
+  outputs_dir: data/outputs
+
+sources:
+  companies_house_page: https://download.companieshouse.gov.uk/en_output.html
+  psc_info_page: https://www.gov.uk/guidance/companies-house-data-products
+  uk_sanctions_page: https://www.gov.uk/government/publications/the-uk-sanctions-list
+  ofac_sdn_page: https://sanctionslist.ofac.treas.gov/Home/static/sdn.html
+
+# Thresholds: set later from profiling results, never guessed.
+thresholds:
+  young_company_months: 12          # F01: incorporated less than this many months before snapshot
+  mass_address_min_companies: null  # F02: set from address-density distribution (Step 4)
+  serial_owner_min_companies: null  # F10: set from companies-per-owner distribution
+  big_cluster_min_companies: null   # F11: set from network cluster sizes
+  address_density_cap: null         # addresses above this are excluded from network edges
+  screening_threshold: null         # set from the recall vs alert-volume curve
+  dob_tolerance_years: 1            # list birth year within +/- this of PSC birth year = DOB match
+
+# Assumptions: stated choices, tested with sensitivity analysis. Not facts.
+assumptions:
+  analysts: null
+  productive_hours_per_analyst_year: null
+  recall_floor: null
+  refresh_cycle_years:
+    SDD: null
+    CDD: null
+    EDD: null
+  hours_per_review:
+    SDD: null
+    CDD: null
+    EDD: null
+  hours_per_alert: null
